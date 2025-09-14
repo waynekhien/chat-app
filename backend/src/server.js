@@ -1,5 +1,5 @@
 import express from "express";
-import cookieParse from "cookie-parser";
+import cookieParser from "cookie-parser";
 import path from "path";
 
 import authRoutes from "./routes/auth.route.js";
@@ -16,7 +16,7 @@ const __dirname = path.resolve();
 const PORT = ENV.PORT || 3000;
 
 app.use(express.json({ limit: "5mb" })) // req.body
-app.use(cookieParse())
+app.use(cookieParser())
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
