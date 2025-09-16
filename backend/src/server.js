@@ -15,18 +15,7 @@ const PORT = ENV.PORT || 3000;
 
 app.use(express.json({ limit: "5mb" })) // req.body
 app.use(cors({
-  origin: (origin, callback) => {
-    const allowedOrigins = [
-      'http://localhost:5173',
-      'https://chatify-flax-sigma.vercel.app',
-      ENV.CLIENT_URL
-    ];
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true,
   credentials: true
 }))
 app.use(cookieParser())
@@ -36,10 +25,10 @@ app.use("/api/messages", messageRoutes);
 
 //make ready for deployment
 if(ENV.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")))
+    app.use(express.static(path.join(__dirname, "../../frontend/dist")))
 
     app.get("*", (req, res) => {
-        res.send(path.join(__dirname, "../frontend", "dist", "index.html"))
+        res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"))
     })
 }
 
