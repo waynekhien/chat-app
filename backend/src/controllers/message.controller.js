@@ -1,5 +1,5 @@
 import cloudinary from "../lib/cloudinary.js";
-import { getReceiverSocketId } from "../lib/socket.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 
@@ -42,7 +42,7 @@ export const sendMessage = async (req, res) => {
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
-    if(!text & !image) {
+    if(!text && !image) {
         return res.status(400).json({message: "Text or image is required"})
     }
     if(senderId.equals(receiverId)){
@@ -102,6 +102,7 @@ export const getChatPartners = async (req, res) => {
 
     res.status(200).json(chatPartners)
   } catch (error) {
-
+    console.log("Error in getChatPartners controller: ", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
