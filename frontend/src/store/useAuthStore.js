@@ -1,17 +1,20 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
 const BASE_URL = import.meta.env.MODE === "development" ? "/" : "https://chat-app-backend-lqld.onrender.com";
 
-export const useAuthStore = create((set, get) => ({
-  authUser: null,
-  isCheckingAuth: true,
-  isSigningUp: false,
-  isLoggingIn: false,
-  socket: null,
-  onlineUsers: [],
+export const useAuthStore = create(
+  persist(
+    (set, get) => ({
+      authUser: null,
+      isCheckingAuth: true,
+      isSigningUp: false,
+      isLoggingIn: false,
+      socket: null,
+      onlineUsers: [],
 
   checkAuth: async () => {
     try {
@@ -103,4 +106,11 @@ export const useAuthStore = create((set, get) => ({
   disconnectSocket: () => {
     if (get().socket?.connect) get().socket.disconnect();
   },
-}));
+}),
+{
+  name: "auth-storage",
+  partialize: (state) => ({ 
+    authUser: state.authUser 
+  }),
+}
+));
